@@ -1,0 +1,16 @@
+file = ${ SOI ~ (line ~ NEWLINE)* ~ NEWLINE? ~ EOI }
+
+line = _{ value | and | lshift | rshift | not | or }
+ident = { ('a'..'z')+ }
+number = { ASCII_DIGIT+ }
+ident_or_number = _{ ident | number }
+
+value = { ident_or_number ~ " -> " ~ ident }
+
+and = { ident_or_number ~ " AND " ~ ident_or_number ~ " -> " ~ ident }
+or = { ident ~ " OR " ~ ident ~ " -> " ~ ident }
+
+not = { "NOT " ~ ident ~ " -> " ~ ident }
+
+lshift = { ident ~ " LSHIFT " ~ number ~ " -> " ~ ident }
+rshift = { ident ~ " RSHIFT " ~ number ~ " -> " ~ ident }
