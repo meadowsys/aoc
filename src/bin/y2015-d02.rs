@@ -8,7 +8,7 @@ fn main() {
 	let file = input.next().unwrap();
 	assert!(matches!(file.as_rule(), Rule::file));
 
-	let total_area = file.into_inner().fold(0usize, |acc, b| {
+	let wrapping_paper = file.clone().into_inner().fold(0usize, |acc, b| {
 		if matches!(b.as_rule(), Rule::EOI) { return acc }
 
 		let (l, w, h) = b.into_lwh();
@@ -24,7 +24,27 @@ fn main() {
 		acc + ([s1, s2, s3].into_iter().sum::<usize>() * 2) + min_side
 	});
 
-	println!("part 1: total area: {total_area}");
+	println!("part 1: total wrapping paper: {wrapping_paper}");
+
+	let ribbon = file.into_inner().fold(0usize, |acc, b| {
+		if matches!(b.as_rule(), Rule::EOI) { return acc }
+
+		let (l, w, h) = b.into_lwh();
+
+		let s1 = 2 * (l + w);
+		let s2 = 2 * (w + h);
+		let s3 = 2 * (h + l);
+
+		let min_side = [s1, s2, s3].iter()
+			.copied()
+			.fold(usize::MAX, |a, c| a.min(c));
+
+		let volume = l * w * h;
+
+		acc + min_side + volume
+	});
+
+	println!("part 2: total ribbon: {ribbon}");
 }
 
 #[derive(pest_derive::Parser)]
