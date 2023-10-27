@@ -34,20 +34,14 @@ enum DirectionManager {
 	Solo {
 		/// (x, y)
 		current_coords: (isize, isize),
-		visited_coords: aoc::Map<(isize, isize), VisitationState>
+		visited_coords: aoc::Set<(isize, isize)>
 	},
 	WithRoboSanta {
 		santa_coords: (isize, isize),
 		robo_coords: (isize, isize),
-		visited_coords: aoc::Map<(isize, isize), VisitationState>,
+		visited_coords: aoc::Set<(isize, isize)>,
 		turn: Turn
 	}
-}
-
-#[derive(Clone)]
-enum VisitationState {
-	VisitedOnce,
-	VisitedMultiple
 }
 
 #[derive(Clone)]
@@ -75,10 +69,10 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 impl DirectionManager {
 	fn new_solo() -> Self {
 		let current_coords = (0, 0);
-		let mut visited_coords = aoc::new_map();
+		let mut visited_coords = aoc::new_set();
 
 		// visited current location first
-		visited_coords.insert(current_coords, VisitationState::VisitedOnce);
+		visited_coords.insert(current_coords);
 
 		Self::Solo { current_coords, visited_coords }
 	}
@@ -86,11 +80,11 @@ impl DirectionManager {
 	fn new_with_robo() -> Self {
 		let santa_coords = (0, 0);
 		let robo_coords = (0, 0);
-		let mut visited_coords = aoc::new_map();
+		let mut visited_coords = aoc::new_set();
 		let turn = Turn::Santa;
 
 		// visited current location first
-		visited_coords.insert(santa_coords, VisitationState::VisitedOnce);
+		visited_coords.insert(santa_coords);
 
 		Self::WithRoboSanta { santa_coords, robo_coords, visited_coords, turn }
 	}
@@ -132,12 +126,7 @@ impl DirectionManager {
 			}
 		}
 
-		let new_state = match visited_coords.get(current_coords) {
-			None => { VisitationState::VisitedOnce }
-			Some(VisitationState::VisitedOnce) => { VisitationState::VisitedMultiple }
-			Some(VisitationState::VisitedMultiple) => { VisitationState::VisitedMultiple }
-		};
-		visited_coords.insert(*current_coords, new_state);
+		visited_coords.insert(*current_coords);
 	}
 
 	fn count_houses_with_present(&self) -> usize {
@@ -145,7 +134,7 @@ impl DirectionManager {
 			DirectionManager::Solo { visited_coords, .. }
 			| DirectionManager::WithRoboSanta { visited_coords, .. }
 			=> {
-				visited_coords.values().count()
+				visited_coords.iter().count()
 			}
 		}
 	}
