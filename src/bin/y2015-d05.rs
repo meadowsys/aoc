@@ -18,4 +18,18 @@ fn main() {
 		.count();
 
 	println!("part 1: nice strings count: {nice_strings_count}");
+
+	let regex4_nonoverlapping_letter_pairs = Regex::new("^[a-zA-Z]*?([a-zA-Z][a-zA-Z])[a-zA-Z]*?\\1[a-zA-Z]*?$").unwrap();
+	let regex5_letter_repeat_with_letter_between = Regex::new("^[a-zA-Z]*?(?:([a-zA-Z])[a-zA-Z]\\1)[a-zA-Z]*?$").unwrap();
+
+	let nice_strings_count = input.split('\n')
+		.filter(|s| {
+			let r1 = regex4_nonoverlapping_letter_pairs.is_match(s).unwrap();
+			let r2 = regex5_letter_repeat_with_letter_between.is_match(s).unwrap();
+
+			r1 && r2
+		})
+		.count();
+
+	println!("part 2: nice strings count: {nice_strings_count}");
 }
