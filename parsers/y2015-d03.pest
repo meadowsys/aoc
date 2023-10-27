@@ -1,0 +1,7 @@
+file = ${ SOI ~ direction+ ~ EOI}
+direction = _{ up | down | left | right }
+
+up = { "^" }
+down = { "v" }
+left = { "<" }
+right = { ">" }
