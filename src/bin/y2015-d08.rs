@@ -8,7 +8,7 @@ fn main() {
 		.map(str::len)
 		.sum::<usize>();
 
-	let escapes_regex = Regex::new("(?:\\\\\\\\|\\\\\"|\\\\x[0-9a-fA-F]{2})").unwrap();
+	let escapes_regex = Regex::new("\\\\\\\\|\\\\\"|\\\\x[0-9a-fA-F]{2}").unwrap();
 	let mem_size = input_str.trim()
 		.split('\n')
 		.map(|s| &s[1..s.len() - 1])
