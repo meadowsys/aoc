@@ -37,12 +37,26 @@ macro_rules! get_input {
 	() => {{
 		let (year, day) = aoc::get_yd!();
 
-		let path = format!("./input/y{year}-d{day}.txt");
-		match std::fs::read_to_string(&path) {
-			Ok(s) => { s }
-			Err(_) => {
-				println!("failed to get input, check that {path} exists");
-				std::process::exit(1);
+		let test_path = format!("./input/y{year}-d{day}.debug.txt");
+		if camino::Utf8PathBuf::from(test_path.clone()).exists() {
+			match std::fs::read_to_string(&test_path) {
+				Ok(s) => {
+					eprintln!("WARNING: {test_path} exists, reading input from there");
+					s
+				}
+				Err(_) => {
+					println!("failed to read debug input at {test_path}, it seemed to exist but couldn't read?");
+					std::process::exit(1);
+				}
+			}
+		} else {
+			let path = format!("./input/y{year}-d{day}.txt");
+			match std::fs::read_to_string(&path) {
+				Ok(s) => { s }
+				Err(_) => {
+					println!("failed to get input, neither {path} nor {test_path} seem to exist");
+					std::process::exit(1);
+				}
 			}
 		}
 	}}
