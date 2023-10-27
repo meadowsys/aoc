@@ -43,6 +43,9 @@ fn main() {
 
 	let shortest = cities_chains.first().unwrap().1;
 	println!("part 1: shortest distance: {shortest}");
+
+	let shortest = cities_chains.last().unwrap().1;
+	println!("part 2: longest distance: {shortest}");
 }
 
 #[derive(pest_derive::Parser)]
