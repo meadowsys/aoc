@@ -42,7 +42,7 @@ fn main() {
 			}
 
 			Rule::EOI => { break }
-			_ => { unreachable!("{}", line) }
+			_ => { unreachable!() }
 		}
 	}
 
