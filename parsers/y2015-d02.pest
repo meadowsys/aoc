@@ -1,0 +1,4 @@
+file = ${ SOI ~ (line ~ NEWLINE)* ~ NEWLINE? ~ EOI }
+line = { number ~ "x" ~ number ~ "x" ~ number }
+
+number = { ASCII_DIGIT+ }
