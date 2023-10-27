@@ -98,29 +98,9 @@ impl DirectionManager {
 	/// returns if the just suppled direction resulted in that house having more
 	/// than one present for the first time, so subsequent visits will return false
 	fn next_instruction(&mut self, direction: Direction) {
-		match self {
+		let (current_coords, visited_coords) = match self {
 			DirectionManager::Solo { current_coords, visited_coords } => {
-				match direction {
-					Direction::Up => {
-						current_coords.1 += 1;
-					}
-					Direction::Down => {
-						current_coords.1 -= 1;
-					}
-					Direction::Left => {
-						current_coords.0 += 1;
-					}
-					Direction::Right => {
-						current_coords.0 -= 1;
-					}
-				}
-
-				let new_state = match visited_coords.get(current_coords) {
-					None => { VisitationState::VisitedOnce }
-					Some(VisitationState::VisitedOnce) => { VisitationState::VisitedMultiple }
-					Some(VisitationState::VisitedMultiple) => { VisitationState::VisitedMultiple }
-				};
-				visited_coords.insert(*current_coords, new_state);
+				(current_coords, visited_coords)
 			}
 			DirectionManager::WithRoboSanta { santa_coords, robo_coords, visited_coords, turn } => {
 				let current_coords = match turn {
@@ -133,30 +113,31 @@ impl DirectionManager {
 						robo_coords
 					}
 				};
+				(current_coords, visited_coords)
+			}
+		};
 
-				match direction {
-					Direction::Up => {
-						current_coords.1 += 1;
-					}
-					Direction::Down => {
-						current_coords.1 -= 1;
-					}
-					Direction::Left => {
-						current_coords.0 += 1;
-					}
-					Direction::Right => {
-						current_coords.0 -= 1;
-					}
-				}
-
-				let new_state = match visited_coords.get(current_coords) {
-					None => { VisitationState::VisitedOnce }
-					Some(VisitationState::VisitedOnce) => { VisitationState::VisitedMultiple }
-					Some(VisitationState::VisitedMultiple) => { VisitationState::VisitedMultiple }
-				};
-				visited_coords.insert(*current_coords, new_state);
+		match direction {
+			Direction::Up => {
+				current_coords.1 += 1;
+			}
+			Direction::Down => {
+				current_coords.1 -= 1;
+			}
+			Direction::Left => {
+				current_coords.0 += 1;
+			}
+			Direction::Right => {
+				current_coords.0 -= 1;
 			}
 		}
+
+		let new_state = match visited_coords.get(current_coords) {
+			None => { VisitationState::VisitedOnce }
+			Some(VisitationState::VisitedOnce) => { VisitationState::VisitedMultiple }
+			Some(VisitationState::VisitedMultiple) => { VisitationState::VisitedMultiple }
+		};
+		visited_coords.insert(*current_coords, new_state);
 	}
 
 	fn count_houses_with_present(&self) -> usize {
