@@ -17,10 +17,9 @@ fn main() {
 		}
 	);
 	let duplicate_houses = direction_manager.visited_coords.values()
-		.filter(|v| matches!(v, VisitationState::VisitedMultiple))
 		.count();
 
-	println!("part 1: houses with 2+ presents: {duplicate_houses}");
+	println!("part 1: houses that got a present: {duplicate_houses}");
 }
 
 #[derive(pest_derive::Parser)]
