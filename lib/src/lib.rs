@@ -51,9 +51,12 @@ macro_rules! get_input {
 pub type Map<K, V> = hashbrown::HashMap<K, V, ahash::RandomState>;
 pub type Set<T> = hashbrown::HashSet<T, ahash::RandomState>;
 
+#[inline]
 pub fn new_map<K, V>() -> Map<K, V> {
 	Map::<K, V>::with_hasher(ahash::RandomState::new())
 }
+
+#[inline]
 pub fn new_set<T>() -> Set<T> {
 	Set::<T>::with_hasher(ahash::RandomState::new())
 }

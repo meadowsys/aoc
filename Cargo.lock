@@ -26,10 +26,27 @@ name = "aoc"
 version = "0.0.0"
 dependencies = [
  "ahash",
+ "aoc-macro",
+ "hashbrown",
+]
+
+[[package]]
+name = "aoc-bin"
+version = "0.0.0"
+dependencies = [
+ "ahash",
+ "aoc",
  "camino",
  "hashbrown",
  "pest",
  "pest_derive",
+]
+
+[[package]]
+name = "aoc-macro"
+version = "0.0.0"
+dependencies = [
+ "proc-macro2",
 ]
 
 [[package]]
