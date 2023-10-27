@@ -61,7 +61,7 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 			"v" => { Direction::Down }
 			"<" => { Direction::Left }
 			">" => { Direction::Right }
-			_ => unreachable!()
+			_ => { unreachable!() }
 		}
 	}
 }

@@ -38,7 +38,7 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 		match self.as_span().as_str() {
 			"(" => { 1 }
 			")" => { -1 }
-			_ => unreachable!()
+			_ => { unreachable!() }
 		}
 	}
 }
