@@ -50,11 +50,11 @@ fn main() {
 
 	let mut part1_wires = wires.clone();
 	let wire_a_part1 = compute_signal("a", &mut part1_wires);
-	println!("wire a, part 1: {wire_a_part1}");
+	println!("part 1: wire a: {wire_a_part1}");
 
 	wires.insert("b".into(), WireSource::Value(ValueRef::Value(wire_a_part1)));
 	let wire_a_part2 = compute_signal("a", &mut wires);
-	println!("wire a, part 2: {wire_a_part2}");
+	println!("part 2: wire a: {wire_a_part2}");
 }
 
 #[derive(pest_derive::Parser)]
