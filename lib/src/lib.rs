@@ -38,7 +38,8 @@ macro_rules! get_input {
 		let (year, day) = aoc::get_yd!();
 
 		let test_path = format!("./input/y{year}-d{day}.debug.txt");
-		if camino::Utf8PathBuf::from(test_path.clone()).exists() {
+		// is_err meaning it doesn't exist
+		if camino::Utf8PathBuf::from(test_path.clone()).exists() && std::env::var("NO_DEBUG_DATA").is_err() {
 			match std::fs::read_to_string(&test_path) {
 				Ok(s) => {
 					eprintln!("WARNING: {test_path} exists, reading input from there");
