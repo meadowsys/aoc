@@ -75,7 +75,7 @@ trait ApplyInstruction {
 
 impl ApplyInstruction for (Instruction, Coord, Coord) {
 	fn apply_to_grid(self, grid: &mut aoc::Set<Coord>) {
-		let (instruction, (x1, y1), (x2, y2)) = self;
+		let (instruction, coord1, coord2) = self;
 
 		let process = match instruction {
 			Instruction::On => {
@@ -100,15 +100,11 @@ impl ApplyInstruction for (Instruction, Coord, Coord) {
 			}
 		};
 
-		for x in if x1 < x2 { x1..=x2 } else { x2..=x1 } {
-			for y in if y1 < y2 { y1..=y2 } else { y2..=y1 } {
-				process((x, y), grid);
-			}
-		}
+		iter_grid(coord1, coord2, |coord| process(coord, grid));
 	}
 
 	fn apply_to_ancient_nordic_elvish_grid(self, grid: &mut aoc::Map<Coord, Brightness>) {
-		let (instruction, (x1, y1), (x2, y2)) = self;
+		let (instruction, coord1, coord2) = self;
 
 		fn get_or_insert_0_brightness<'h>(
 			grid: &'h mut aoc::Map<Coord, Brightness>,
@@ -144,10 +140,18 @@ impl ApplyInstruction for (Instruction, Coord, Coord) {
 			}
 		};
 
-		for x in if x1 < x2 { x1..=x2 } else { x2..=x1 } {
-			for y in if y1 < y2 { y1..=y2 } else { y2..=y1 } {
-				process((x, y), grid);
-			}
+		iter_grid(coord1, coord2, |coord| process(coord, grid));
+	}
+}
+
+#[inline]
+fn iter_grid<F>((x1, y1): Coord, (x2, y2): Coord, mut f: F)
+where
+	F: FnMut(Coord)
+{
+	for x in if x1 < x2 { x1..=x2 } else { x2..=x1 } {
+		for y in if y1 < y2 { y1..=y2 } else { y2..=y1 } {
+			f((x, y));
 		}
 	}
 }
