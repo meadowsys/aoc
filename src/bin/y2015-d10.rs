@@ -18,11 +18,13 @@ fn main() {
 
 	println!("part 1: length after 40 iters: {}", results.last().unwrap().len());
 
-	let str_size = results.iter().map(String::len).sum::<usize>();
-	let mem_used = results.iter().map(String::capacity).sum::<usize>();
-	println!("just for fun: actual str size: {str_size}");
-	println!("              memory used (capacity): {mem_used}");
-	println!("              memory wasted: {}", mem_used - str_size);
+	if aoc::allow_fun!() {
+		let str_size = results.iter().map(String::len).sum::<usize>();
+		let mem_used = results.iter().map(String::capacity).sum::<usize>();
+		println!("just for fun: actual str size: {str_size}");
+		println!("              memory used (capacity): {mem_used}");
+		println!("              memory wasted: {}", mem_used - str_size);
+	}
 }
 
 fn look_and_say(input: &str, regex: &Regex) -> String {

@@ -32,6 +32,7 @@ macro_rules! get_yd {
 		(year, day)
 	}}
 }
+
 #[macro_export]
 macro_rules! get_input {
 	() => {{
@@ -61,6 +62,13 @@ macro_rules! get_input {
 			}
 		}
 	}}
+}
+
+#[macro_export]
+macro_rules! allow_fun {
+	() => {
+		std::env::var("NO_FUN").is_err()
+	}
 }
 
 pub type Map<K, V> = hashbrown::HashMap<K, V, ahash::RandomState>;
