@@ -5,26 +5,20 @@ fn main() {
 	let input = input_str.trim();
 
 	let regex = Regex::new(r"(?:(\d)\1*)").unwrap();
+
 	let iterations = 40;
+	let result = loop_look_and_say(input, &regex, iterations);
+	println!(
+		"part 1: length after {iterations} iterations: {}",
+		result.len()
+	);
 
-	let mut results = Vec::<String>::with_capacity(iterations);
-	for _ in 0..iterations {
-		let prev = results.last()
-			.map(|s| s.as_str())
-			.unwrap_or_else(|| input);
-		let result = look_and_say(prev, &regex);
-		results.push(result);
-	}
-
-	println!("part 1: length after 40 iters: {}", results.last().unwrap().len());
-
-	if aoc::allow_fun!() {
-		let str_size = results.iter().map(String::len).sum::<usize>();
-		let mem_used = results.iter().map(String::capacity).sum::<usize>();
-		println!("just for fun: actual str size: {str_size}");
-		println!("              memory used (capacity): {mem_used}");
-		println!("              memory wasted: {}", mem_used - str_size);
-	}
+	let more_iterations = 50;
+	let result = loop_look_and_say(&result, &regex, more_iterations - iterations);
+	println!(
+		"part 2: length after {more_iterations} iterations: {}",
+		result.len()
+	);
 }
 
 fn look_and_say(input: &str, regex: &Regex) -> String {
@@ -42,4 +36,12 @@ fn look_and_say(input: &str, regex: &Regex) -> String {
 	}
 
 	result
+}
+
+fn loop_look_and_say(input: &str, regex: &Regex, iterations: usize) -> String {
+	if iterations == 0 {
+		input.into()
+	} else {
+		look_and_say(&loop_look_and_say(input, regex, iterations - 1), regex)
+	}
 }
