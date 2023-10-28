@@ -71,15 +71,34 @@ macro_rules! allow_fun {
 	}
 }
 
+#[macro_export]
+macro_rules! map {
+	() => {
+		aoc::Map::with_hasher(ahash::RandomState::new())
+	};
+	($k:ident, $v:ident) => {
+		aoc::Map::<$k, $v>::with_hasher(ahash::RandomState::new())
+	};
+	(_, $v:ident) => {
+		aoc::Map::<_, $v>::with_hasher(ahash::RandomState::new())
+	};
+	($k:ident, _) => {
+		aoc::Map::<$k, _>::with_hasher(ahash::RandomState::new())
+	}
+}
+
+#[macro_export]
+macro_rules! set {
+	() => {
+		aoc::Set::with_hasher(ahash::RandomState::new())
+	};
+	($t:ident) => {
+		aoc::Set::<$t>::with_hasher(ahash::RandomState::new())
+	};
+	(_) => {
+		aoc::set!()
+	}
+}
+
 pub type Map<K, V> = hashbrown::HashMap<K, V, ahash::RandomState>;
 pub type Set<T> = hashbrown::HashSet<T, ahash::RandomState>;
-
-#[inline]
-pub fn new_map<K, V>() -> Map<K, V> {
-	Map::<K, V>::with_hasher(ahash::RandomState::new())
-}
-
-#[inline]
-pub fn new_set<T>() -> Set<T> {
-	Set::<T>::with_hasher(ahash::RandomState::new())
-}

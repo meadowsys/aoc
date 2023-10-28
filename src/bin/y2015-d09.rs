@@ -9,7 +9,7 @@ fn main() {
 	assert!(matches!(file.as_rule(), Rule::file));
 
 	let distances = {
-		let mut distances = aoc::new_map();
+		let mut distances = aoc::map!();
 		for line in file.into_inner() {
 			if matches!(line.as_rule(), Rule::EOI) { break }
 

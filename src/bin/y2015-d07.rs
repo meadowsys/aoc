@@ -8,7 +8,7 @@ fn main() {
 	let file = input.next().unwrap();
 	assert!(matches!(file.as_rule(), Rule::file));
 
-	let mut wires = aoc::new_map::<String, WireSource>();
+	let mut wires = aoc::map!(String, WireSource);
 
 	for line in file.into_inner() {
 		let line_rule = line.as_rule();

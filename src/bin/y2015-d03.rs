@@ -69,7 +69,7 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 impl DirectionManager {
 	fn new_solo() -> Self {
 		let current_coords = (0, 0);
-		let mut visited_coords = aoc::new_set();
+		let mut visited_coords = aoc::set!();
 
 		// visited current location first
 		visited_coords.insert(current_coords);
@@ -80,7 +80,7 @@ impl DirectionManager {
 	fn new_with_robo() -> Self {
 		let santa_coords = (0, 0);
 		let robo_coords = (0, 0);
-		let mut visited_coords = aoc::new_set();
+		let mut visited_coords = aoc::set!();
 		let turn = Turn::Santa;
 
 		// visited current location first
