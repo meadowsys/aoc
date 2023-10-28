@@ -24,6 +24,8 @@ fn main() {
 #[grammar = "parsers/y2015-d06.pest"]
 pub struct InputParser;
 
+type Coord = (usize, usize);
+
 #[derive(Clone)]
 enum Instruction {
 	On,
@@ -32,11 +34,11 @@ enum Instruction {
 }
 
 trait PairExts {
-	fn into_instruction(self) -> (Instruction, (usize, usize), (usize, usize));
+	fn into_instruction(self) -> (Instruction, Coord, Coord);
 }
 
 impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
-	fn into_instruction(self) -> (Instruction, (usize, usize), (usize, usize)) {
+	fn into_instruction(self) -> (Instruction, Coord, Coord) {
 		let instruction = match self.as_rule() {
 			Rule::on => { Instruction::On }
 			Rule::off => { Instruction::Off }
@@ -59,30 +61,30 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 }
 
 trait ApplyInstruction {
-	fn apply_to_grid(self, grid: &mut aoc::Set<(usize, usize)>);
+	fn apply_to_grid(self, grid: &mut aoc::Set<Coord>);
 }
 
-impl ApplyInstruction for (Instruction, (usize, usize), (usize, usize)) {
-	fn apply_to_grid(self, grid: &mut aoc::Set<(usize, usize)>) {
+impl ApplyInstruction for (Instruction, Coord, Coord) {
+	fn apply_to_grid(self, grid: &mut aoc::Set<Coord>) {
 		let (instruction, (x1, y1), (x2, y2)) = self;
 
 		let process = match instruction {
 			Instruction::On => {
-				fn turn_on(x: usize, y: usize, grid: &mut aoc::Set<(usize, usize)>) {
-					grid.insert((x, y));
+				fn turn_on(coord: Coord, grid: &mut aoc::Set<Coord>) {
+					grid.insert(coord);
 				}
 				turn_on
 			}
 			Instruction::Off => {
-				fn turn_off(x: usize, y: usize, grid: &mut aoc::Set<(usize, usize)>) {
-					grid.remove(&(x, y));
+				fn turn_off(coord: Coord, grid: &mut aoc::Set<Coord>) {
+					grid.remove(&coord);
 				}
 				turn_off
 			}
 			Instruction::Toggle => {
-				fn toggle(x: usize, y: usize, grid: &mut aoc::Set<(usize, usize)>) {
-					if !grid.remove(&(x, y)) {
-						grid.insert((x, y));
+				fn toggle(coord: Coord, grid: &mut aoc::Set<Coord>) {
+					if !grid.remove(&coord) {
+						grid.insert(coord);
 					}
 				}
 				toggle
@@ -91,7 +93,7 @@ impl ApplyInstruction for (Instruction, (usize, usize), (usize, usize)) {
 
 		for x in if x1 < x2 { x1..=x2 } else { x2..=x1 } {
 			for y in if y1 < y2 { y1..=y2 } else { y2..=y1 } {
-				process(x, y, grid);
+				process((x, y), grid);
 			}
 		}
 	}
