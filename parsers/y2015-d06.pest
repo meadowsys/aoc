@@ -1,0 +1,10 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE? ~ EOI }
+
+line = _{ on | off | toggle }
+
+on = { "turn on " ~ coords ~ " through " ~ coords }
+off = { "turn off " ~ coords ~ " through " ~ coords }
+toggle = { "toggle " ~ coords ~ " through " ~ coords }
+
+coords = _{ number ~ "," ~ number }
+number = { ASCII_DIGIT+ }
