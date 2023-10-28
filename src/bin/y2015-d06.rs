@@ -9,15 +9,22 @@ fn main() {
 	assert!(matches!(file.as_rule(), Rule::file));
 
 	let mut the_grid = aoc::set!();
-
-	for line in file.into_inner() {
+	for line in file.clone().into_inner() {
 		if matches!(line.as_rule(), Rule::EOI) { break }
 
 		line.into_instruction()
 			.apply_to_grid(&mut the_grid);
 	}
-
 	println!("part 1: number of lights lit: {}", the_grid.len());
+
+	let mut ancient_nordic_elvish_grid = aoc::map!();
+	for line in file.into_inner() {
+		if matches!(line.as_rule(), Rule::EOI) { break }
+
+		line.into_instruction()
+			.apply_to_ancient_nordic_elvish_grid(&mut ancient_nordic_elvish_grid);
+	}
+	println!("part 2: total brightness: {}", ancient_nordic_elvish_grid.iter().map(|c| *c.1).sum::<usize>());
 }
 
 #[derive(pest_derive::Parser)]
@@ -25,6 +32,7 @@ fn main() {
 pub struct InputParser;
 
 type Coord = (usize, usize);
+type Brightness = usize;
 
 #[derive(Clone)]
 enum Instruction {
@@ -62,6 +70,7 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 
 trait ApplyInstruction {
 	fn apply_to_grid(self, grid: &mut aoc::Set<Coord>);
+	fn apply_to_ancient_nordic_elvish_grid(self, grid: &mut aoc::Map<Coord, Brightness>);
 }
 
 impl ApplyInstruction for (Instruction, Coord, Coord) {
@@ -88,6 +97,50 @@ impl ApplyInstruction for (Instruction, Coord, Coord) {
 					}
 				}
 				toggle
+			}
+		};
+
+		for x in if x1 < x2 { x1..=x2 } else { x2..=x1 } {
+			for y in if y1 < y2 { y1..=y2 } else { y2..=y1 } {
+				process((x, y), grid);
+			}
+		}
+	}
+
+	fn apply_to_ancient_nordic_elvish_grid(self, grid: &mut aoc::Map<Coord, Brightness>) {
+		let (instruction, (x1, y1), (x2, y2)) = self;
+
+		fn get_or_insert_0_brightness<'h>(
+			grid: &'h mut aoc::Map<Coord, Brightness>,
+			coord: &'_ Coord
+		) -> &'h mut usize {
+			if !grid.contains_key(coord) {
+				grid.insert(*coord, 0);
+			}
+			grid.get_mut(coord).unwrap()
+		}
+
+		let process = match instruction {
+			Instruction::On => {
+				fn increase_brightness_1(coord: Coord, grid: &mut aoc::Map<Coord, Brightness>) {
+					let brightness = get_or_insert_0_brightness(grid, &coord);
+					*brightness += 1;
+				}
+				increase_brightness_1
+			}
+			Instruction::Off => {
+				fn saturating_decrease_brightness_1(coord: Coord, grid: &mut aoc::Map<Coord, Brightness>) {
+					let brightness = get_or_insert_0_brightness(grid, &coord);
+					*brightness = brightness.saturating_sub(1);
+				}
+				saturating_decrease_brightness_1
+			}
+			Instruction::Toggle => {
+				fn increase_brightness_2(coord: Coord, grid: &mut aoc::Map<Coord, Brightness>) {
+					let brightness = get_or_insert_0_brightness(grid, &coord);
+					*brightness += 2;
+				}
+				increase_brightness_2
 			}
 		};
 
