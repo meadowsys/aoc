@@ -78,12 +78,6 @@ macro_rules! map {
 	};
 	($k:ty, $v:ty) => {
 		aoc::Map::<$k, $v>::with_hasher(ahash::RandomState::new())
-	};
-	(_, $v:ty) => {
-		aoc::Map::<_, $v>::with_hasher(ahash::RandomState::new())
-	};
-	($k:ty, _) => {
-		aoc::Map::<$k, _>::with_hasher(ahash::RandomState::new())
 	}
 }
 
@@ -94,9 +88,6 @@ macro_rules! set {
 	};
 	($t:ty) => {
 		aoc::Set::<$t>::with_hasher(ahash::RandomState::new())
-	};
-	(_) => {
-		aoc::set!()
 	}
 }
 
