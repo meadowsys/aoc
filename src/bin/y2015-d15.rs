@@ -21,11 +21,20 @@ fn main() {
 	assert!(split_ingredients.iter().all(|q| q.iter().map(|i| i.0).sum::<usize>() == 100));
 
 	let max_score = split_ingredients.iter()
-		.map(|i| i.get_cookie_total_score())
+		.map(|i| i.get_cookie_total_score().0)
 		.max()
 		.unwrap();
 
 	println!("part 1: max score: {max_score}");
+
+	let max_score_calorie_500 = split_ingredients.iter()
+		.map(|i| i.get_cookie_total_score())
+		.filter(|c| c.1 == 500)
+		.map(|c| c.0)
+		.max()
+		.unwrap();
+
+	println!("part 1: max score 500cal cookie: {max_score_calorie_500}");
 }
 
 #[derive(pest_derive::Parser)]
@@ -139,12 +148,12 @@ impl CookieIngredientsExts for &[CookieIngredient] {
 }
 
 trait CookieIngredientQualitiesExts {
-	fn get_cookie_total_score(self) -> usize;
+	fn get_cookie_total_score(self) -> (usize, usize);
 }
 
 impl CookieIngredientQualitiesExts for &[(usize, CookieIngredient)] {
-	fn get_cookie_total_score(self) -> usize {
-		let Scores { capacity, durability, flavour, texture, calories: _ } = self.iter()
+	fn get_cookie_total_score(self) -> (usize, usize) {
+		let Scores { capacity, durability, flavour, texture, calories } = self.iter()
 			.map(|(amount, ingredient)| {
 				let Scores { capacity, durability, flavour, texture, calories } = ingredient.scores;
 				let amount = *amount as isize;
@@ -152,6 +161,7 @@ impl CookieIngredientQualitiesExts for &[(usize, CookieIngredient)] {
 				let durability = durability * amount;
 				let flavour = flavour * amount;
 				let texture = texture * amount;
+				let calories = calories * amount;
 				Scores { capacity, durability, flavour, texture, calories }
 			})
 			.reduce(|s1, s2| {
@@ -169,6 +179,6 @@ impl CookieIngredientQualitiesExts for &[(usize, CookieIngredient)] {
 		let flavour = flavour.max(0) as usize;
 		let texture = texture.max(0) as usize;
 
-		capacity * durability * flavour * texture
+		(capacity * durability * flavour * texture, calories as usize)
 	}
 }
