@@ -9,6 +9,13 @@ fn main() {
 	}
 
 	println!("part 1: next password: \"{}\"", input.chars().rev().collect::<String>());
+
+	increment_reversed_input(&mut input);
+	while !test(&input, &testdata) {
+		increment_reversed_input(&mut input);
+	}
+
+	println!("part 2: next password (after that): \"{}\"", input.chars().rev().collect::<String>());
 }
 
 const I: u8 = b'i';
