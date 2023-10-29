@@ -2,6 +2,14 @@ fn main() {
 	let input_str = aoc::get_input!();
 	let mut input = input_str.trim().chars().rev().collect::<String>();
 
+	// this optimisation is worth it
+	//
+	// without this (aka running `test(&input, &build_testdata())`),
+	// here are the times with my input running on my machine:
+	// debug: 1.8s => 14.98s
+	// release: 0.487 => 1.95
+	// notably, release without this optimisation takes LONGER to run than
+	// debug with this optimisation
 	let testdata = build_testdata();
 
 	while !test(&input, &testdata) {
@@ -75,6 +83,8 @@ fn build_testdata() -> TestData {
 fn test(str: &str, data: &TestData) -> bool {
 	let TestData { seq_3, pairs } = data;
 
+	// rejecting forbidden letters is handled by `increment_reversed_input` as it runs
+	// so no need to check here
 	let seq = seq_3.iter().any(|seq| str.contains(seq));
 	let pairs = pairs.iter().filter(|pair| str.contains(*pair)).count() >= 2;
 
