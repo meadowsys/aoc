@@ -1,0 +1,19 @@
+file = ${ SOI ~ (line ~ NEWLINE)* ~ NEWLINE? ~ EOI }
+
+line = {
+	name ~ ": "
+	~ "capacity " ~ capacity ~ ", "
+	~ "durability " ~ durability ~ ", "
+	~ "flavor " ~ flavor ~ ", "
+	~ "texture " ~ texture ~ ", "
+	~ "calories " ~ calories
+}
+
+name = { ASCII_ALPHA_UPPER ~ ASCII_ALPHA* }
+capacity = { signed_int }
+durability = { signed_int }
+flavor = { signed_int }
+texture = { signed_int }
+calories = { signed_int }
+
+signed_int = _{ "-"? ~ ASCII_DIGIT+ }
