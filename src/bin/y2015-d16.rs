@@ -8,6 +8,11 @@ fn main() {
 	let file = input.next().unwrap();
 	assert!(matches!(file.as_rule(), Rule::file));
 
+	let sues = file.into_inner()
+		.take_while(|sue| !matches!(sue.as_rule(), Rule::EOI))
+		.map(|sue| sue.into_sue())
+		.collect::<Vec<_>>();
+
 	let expected_children = 3;
 	let expected_cats = 7;
 	let expected_samoyeds = 2;
@@ -19,9 +24,7 @@ fn main() {
 	let expected_cars = 2;
 	let expected_perfumes = 1;
 
-	let sue = file.clone().into_inner()
-		.take_while(|sue| !matches!(sue.as_rule(), Rule::EOI))
-		.map(|sue| sue.into_sue())
+	let sue = sues.iter()
 		.filter(|sue| if let Some(a) = sue.children { a == expected_children } else { true })
 		.filter(|sue| if let Some(a) = sue.cats { a == expected_cats } else { true })
 		.filter(|sue| if let Some(a) = sue.samoyeds { a == expected_samoyeds } else { true })
@@ -33,15 +36,12 @@ fn main() {
 		.filter(|sue| if let Some(a) = sue.cars { a == expected_cars } else { true })
 		.filter(|sue| if let Some(a) = sue.perfumes { a == expected_perfumes } else { true })
 		.collect::<Vec<_>>();
-
 	assert_eq!(sue.len(), 1);
 
 	let sue = sue.into_iter().next().unwrap();
 	println!("part 1: sue #{}", sue.num);
 
-	let sue = file.clone().into_inner()
-		.take_while(|sue| !matches!(sue.as_rule(), Rule::EOI))
-		.map(|sue| sue.into_sue())
+	let sue = sues.iter()
 		.filter(|sue| if let Some(a) = sue.children { a == expected_children } else { true })
 		.filter(|sue| if let Some(a) = sue.cats { a > expected_cats } else { true })
 		.filter(|sue| if let Some(a) = sue.samoyeds { a == expected_samoyeds } else { true })
@@ -53,7 +53,6 @@ fn main() {
 		.filter(|sue| if let Some(a) = sue.cars { a == expected_cars } else { true })
 		.filter(|sue| if let Some(a) = sue.perfumes { a == expected_perfumes } else { true })
 		.collect::<Vec<_>>();
-
 	assert_eq!(sue.len(), 1);
 
 	let sue = sue.into_iter().next().unwrap();
