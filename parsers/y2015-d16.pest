@@ -1,0 +1,9 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE* ~ EOI }
+
+line = { "Sue " ~ suenum ~ ": " ~ (item ~ ", ")* ~ item }
+
+suenum = { number }
+item = { string ~ ": " ~ number }
+
+string = { ASCII_ALPHA+ }
+number = { ASCII_DIGIT+ }
