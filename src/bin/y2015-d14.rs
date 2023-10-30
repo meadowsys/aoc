@@ -72,6 +72,7 @@ fn main() {
 pub struct InputParser;
 
 #[derive(Clone)]
+#[allow(dead_code)]
 struct Reindeer {
 	name: String,
 	speed: usize,
