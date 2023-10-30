@@ -42,6 +42,7 @@ fn main() {
 pub struct InputParser;
 
 #[derive(Clone, Debug)]
+#[allow(dead_code)]
 struct CookieIngredient {
 	name: String,
 	scores: Scores
