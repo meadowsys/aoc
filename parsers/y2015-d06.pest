@@ -1,4 +1,4 @@
-file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE? ~ EOI }
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE* ~ EOI }
 
 line = _{ on | off | toggle }
 

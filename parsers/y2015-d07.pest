@@ -1,4 +1,4 @@
-file = ${ SOI ~ (line ~ NEWLINE)* ~ NEWLINE? ~ EOI }
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE* ~ EOI }
 
 line = _{ value | and | or | not | lshift | rshift }
 ident = { ('a'..'z')+ }
