@@ -17,28 +17,38 @@ fn main() {
 		.flat_map(|(p1, p2)| [p1.clone(), p2.clone()])
 		.collect::<aoc::Set<_>>();
 
-	let mut orderings = get_people_ordering(people)
+	let mut orderings = get_people_orderings(people.clone())
 		.into_iter()
-		.map(|order| {
-			let mut total_happiness = order.windows(2)
-				.flat_map(|people| {
-					let [p1, p2] = people else { unreachable!() };
-					let (r1, r2) = get_both_relations(p1.into(), p2.into(), &relations);
-					[r1, r2]
-				})
-				.sum::<isize>();
-
-			let (p1, p2) = (order.first().unwrap(), order.last().unwrap());
-			let (r1, r2) = get_both_relations(p1.into(), p2.into(), &relations);
-			total_happiness += r1 + r2;
-
-			(order, total_happiness)
-		})
+		.map(|o| o.get_total_happiness(&relations))
 		.collect::<Vec<_>>();
 	orderings.sort_unstable_by_key(|o| o.1);
 
 	let greatest_happiness = orderings.last().unwrap().1;
 	println!("part 1: greatest happiness: {greatest_happiness}");
+
+	let mut relations = relations;
+
+	// Nederlands
+	let jij = "jij";
+	for person in people.iter() {
+		let r1 = (jij.into(), person.into());
+		let r2 = (person.into(), jij.into());
+		relations.insert(r1, 0);
+		relations.insert(r2, 0);
+	}
+
+	let people = relations.keys()
+		.flat_map(|(p1, p2)| [p1.clone(), p2.clone()])
+		.collect::<aoc::Set<_>>();
+
+	let mut orderings = get_people_orderings(people)
+		.into_iter()
+		.map(|o| o.get_total_happiness(&relations))
+		.collect::<Vec<_>>();
+	orderings.sort_unstable_by_key(|o| o.1);
+
+	let greatest_happiness = orderings.last().unwrap().1;
+	println!("part 2: greatest happiness (with you): {greatest_happiness}");
 }
 
 #[derive(pest_derive::Parser)]
@@ -72,8 +82,30 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 	}
 }
 
-fn get_people_ordering(people: aoc::Set<String>) -> aoc::Set<Vec<String>> {
-	fn get_people_ordering_inner(people: Vec<String>) -> Vec<Vec<String>> {
+trait StringVecExts {
+	fn get_total_happiness(self, relations: &aoc::Map<(String, String), isize>) -> (Vec<String>, isize);
+}
+
+impl StringVecExts for Vec<String> {
+	fn get_total_happiness(self, relations: &aoc::Map<(String, String), isize>) -> (Vec<String>, isize) {
+		let mut total_happiness = self.windows(2)
+			.flat_map(|people| {
+				let [p1, p2] = people else { unreachable!() };
+				let (r1, r2) = get_both_relations(p1.into(), p2.into(), relations);
+				[r1, r2]
+			})
+			.sum::<isize>();
+
+		let (p1, p2) = (self.first().unwrap(), self.last().unwrap());
+		let (r1, r2) = get_both_relations(p1.into(), p2.into(), relations);
+		total_happiness += r1 + r2;
+
+		(self, total_happiness)
+	}
+}
+
+fn get_people_orderings(people: aoc::Set<String>) -> aoc::Set<Vec<String>> {
+	fn get_people_orderings_inner(people: Vec<String>) -> Vec<Vec<String>> {
 		if people.len() == 1 {
 			vec![vec![people.into_iter().next().unwrap()]]
 		} else {
@@ -83,7 +115,7 @@ fn get_people_ordering(people: aoc::Set<String>) -> aoc::Set<Vec<String>> {
 						.filter(|p| *p != person)
 						.cloned()
 						.collect();
-					let mut subgroup = get_people_ordering_inner(people);
+					let mut subgroup = get_people_orderings_inner(people);
 					subgroup.iter_mut().for_each(|g| g.push(person.clone()));
 					subgroup
 				})
@@ -91,7 +123,7 @@ fn get_people_ordering(people: aoc::Set<String>) -> aoc::Set<Vec<String>> {
 		}
 	}
 
-	let vec = get_people_ordering_inner(people.into_iter().collect());
+	let vec = get_people_orderings_inner(people.into_iter().collect());
 	let vec_len = vec.len();
 
 	let set = vec.into_iter().collect::<aoc::Set<_>>();
