@@ -25,6 +25,46 @@ fn main() {
 		.unwrap();
 
 	println!("part 1: max distance travelled: {max_distance}");
+
+	reindeer.iter_mut()
+		.for_each(|r| r.reset());
+
+	let mut max_distance = 0;
+	let mut indices = Vec::with_capacity(reindeer.len());
+
+	for _ in 0..time {
+		reindeer.iter_mut()
+			.for_each(|r| r.step());
+
+		reindeer.iter()
+			.enumerate()
+			.for_each(|(i, r)| {
+				use std::cmp::Ordering::*;
+				match r.distance_travelled.cmp(&max_distance) {
+					Greater => {
+						max_distance = r.distance_travelled;
+						indices.clear();
+						indices.push(i);
+					}
+					Equal => {
+						indices.push(i);
+					}
+					_ => {}
+				}
+			});
+
+		reindeer.iter_mut()
+			.enumerate()
+			.filter(|(i, _)| indices.contains(i))
+			.for_each(|(_, r)| r.add_point());
+	}
+
+	let most_points = reindeer.iter()
+		.map(|r| r.points)
+		.max()
+		.unwrap();
+
+	println!("part 2: most points: {most_points}");
 }
 
 #[derive(pest_derive::Parser)]
@@ -38,7 +78,8 @@ struct Reindeer {
 	active_time: usize,
 	idle_time: usize,
 	iter_state: IterState,
-	distance_travelled: usize
+	distance_travelled: usize,
+	points: usize
 }
 
 #[derive(Clone)]
@@ -81,6 +122,17 @@ impl Reindeer {
 		};
 		self.iter_state = new_iter_state;
 	}
+
+	#[inline]
+	fn add_point(&mut self) {
+		self.points += 1;
+	}
+
+	fn reset(&mut self) {
+		self.iter_state = IterState::default();
+		self.distance_travelled = 0;
+		self.points = 0;
+	}
 }
 
 trait PairExts {
@@ -102,7 +154,15 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 		let idle_time = inner.next().unwrap().into_idle_time();
 		assert!(inner.next().is_none());
 
-		Reindeer { name, speed, active_time, idle_time, iter_state: IterState::default(), distance_travelled: 0 }
+		Reindeer {
+			name,
+			speed,
+			active_time,
+			idle_time,
+			iter_state: IterState::default(),
+			distance_travelled: 0,
+			points: 0
+		}
 	}
 
 	#[inline]
