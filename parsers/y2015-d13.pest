@@ -1,0 +1,8 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE* ~ EOI }
+
+line = { name ~ " would " ~ (gain | lose) ~ " " ~ happiness ~ " happiness units by sitting next to " ~ name ~ "." }
+
+name = { ASCII_ALPHA+ }
+gain = { "gain" }
+lose = { "lose" }
+happiness = { ASCII_DIGIT+ }
