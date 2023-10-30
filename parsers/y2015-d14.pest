@@ -1,0 +1,11 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE* ~ EOI }
+
+line = { name ~ " can fly " ~ speed ~ " km/s for " ~ active_time ~ " seconds, but then must rest for " ~ idle_time ~ " seconds." }
+
+name = { string }
+speed = { number }
+active_time = { number }
+idle_time = { number }
+
+string = _{ ASCII_ALPHA+ }
+number = _{ ASCII_DIGIT+ }
