@@ -1,0 +1,7 @@
+file = ${ SOI ~ (replacement_def_line ~ NEWLINE)+ ~ "\n" ~ molecule ~ NEWLINE* ~ EOI }
+
+replacement_def_line = { nonsilent_string ~ " => " ~ nonsilent_string }
+molecule = { string }
+
+string = _{ ASCII_ALPHA+ }
+nonsilent_string = { ASCII_ALPHA+ }
