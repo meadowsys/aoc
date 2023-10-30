@@ -16,6 +16,19 @@ fn main() {
 
 	let combos = calc_valid_bucket_combos(buckets, target_amount);
 	println!("part 1: number of container combos: {}", combos.len());
+
+	let min = combos.iter()
+		.map(|c| c.len())
+		.min()
+		.unwrap();
+	let combos_with_min = combos.iter()
+		.filter(|c| c.len() == min)
+		.collect::<Vec<_>>();
+	println!(
+		"part 2: number of combos of min size ({min_size}): {combos}",
+		min_size = min,
+		combos = combos_with_min.len()
+	);
 }
 
 
