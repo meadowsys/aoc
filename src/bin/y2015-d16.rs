@@ -19,7 +19,7 @@ fn main() {
 	let expected_cars = 2;
 	let expected_perfumes = 1;
 
-	let sue = file.into_inner()
+	let sue = file.clone().into_inner()
 		.take_while(|sue| !matches!(sue.as_rule(), Rule::EOI))
 		.map(|sue| sue.into_sue())
 		.filter(|sue| if let Some(a) = sue.children { a == expected_children } else { true })
@@ -38,6 +38,26 @@ fn main() {
 
 	let sue = sue.into_iter().next().unwrap();
 	println!("part 1: sue #{}", sue.num);
+
+	let sue = file.clone().into_inner()
+		.take_while(|sue| !matches!(sue.as_rule(), Rule::EOI))
+		.map(|sue| sue.into_sue())
+		.filter(|sue| if let Some(a) = sue.children { a == expected_children } else { true })
+		.filter(|sue| if let Some(a) = sue.cats { a > expected_cats } else { true })
+		.filter(|sue| if let Some(a) = sue.samoyeds { a == expected_samoyeds } else { true })
+		.filter(|sue| if let Some(a) = sue.pomeranians { a < expected_pomeranians } else { true })
+		.filter(|sue| if let Some(a) = sue.akitas { a == expected_akitas } else { true })
+		.filter(|sue| if let Some(a) = sue.vizslas { a == expected_vizslas } else { true })
+		.filter(|sue| if let Some(a) = sue.goldfish { a < expected_goldfish } else { true })
+		.filter(|sue| if let Some(a) = sue.trees { a > expected_trees } else { true })
+		.filter(|sue| if let Some(a) = sue.cars { a == expected_cars } else { true })
+		.filter(|sue| if let Some(a) = sue.perfumes { a == expected_perfumes } else { true })
+		.collect::<Vec<_>>();
+
+	assert_eq!(sue.len(), 1);
+
+	let sue = sue.into_iter().next().unwrap();
+	println!("part 2: sue #{}", sue.num);
 }
 
 #[derive(pest_derive::Parser)]
