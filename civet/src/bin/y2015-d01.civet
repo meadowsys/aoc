@@ -1,3 +1,9 @@
 function main
-	input_str := aoc_get_input() |> await
-	console.log input_str
+	input := aoc_get_input() |> await
+
+	input
+		|> .trim()
+		|> .split("")
+		|> .map (& === "(" ? 1 : -1)
+		|> .reduce (a, b) => a + b, 0
+		||> (res) => console.log `part 1: floor ${res}`
