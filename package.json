@@ -6,7 +6,9 @@
 	"devDependencies": {
 		"@danielx/civet": "^0.6.48",
 		"@types/node": "^20.8.10",
+		"estree-walker": "^3.0.3",
 		"glob": "^10.3.10",
+		"magic-string": "^0.30.5",
 		"rollup": "^4.2.0",
 		"rollup-plugin-typescript2": "^0.36.0",
 		"typescript": "^5.2.2"

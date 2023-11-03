@@ -1,1 +1,3 @@
-console.log "e"
+function main
+	input_str := aoc_get_input() |> await
+	console.log input_str
