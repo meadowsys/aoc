@@ -43,7 +43,7 @@ macro_rules! get_input {
 		if camino::Utf8PathBuf::from(test_path.clone()).exists() && std::env::var("NO_DEBUG_DATA").is_err() {
 			match std::fs::read_to_string(&test_path) {
 				Ok(s) => {
-					eprintln!("WARNING: {test_path} exists, reading input from there");
+					eprintln!("WARNING: {test_path} exists, reading input from there. To disable, set `NO_DEBUG_DATA=1`");
 					s
 				}
 				Err(_) => {
