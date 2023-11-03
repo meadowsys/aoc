@@ -15,8 +15,10 @@ function main
 
 	current_floor .= 0
 
-	for i of [0...input.length]
-		current_floor += input[i]
-		if current_floor < 0
-			console.log `part 2: step ${i + 1}`
-			break
+	input
+		|> .map (instruction, i) => [instruction, i + 1] as const
+		|> .find ([instruction, i]) =>
+			current_floor += instruction
+			current_floor < 0
+		|> unwrap
+		||> (res) => console.log `part 2: step ${res.1}`
