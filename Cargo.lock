@@ -35,7 +35,6 @@ name = "aoc"
 version = "0.0.0"
 dependencies = [
  "ahash",
- "aoc-macro",
  "hashbrown",
 ]
 
@@ -54,13 +53,6 @@ dependencies = [
  "pest_derive",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "aoc-macro"
-version = "0.0.0"
-dependencies = [
- "proc-macro2",
 ]
 
 [[package]]
