@@ -49,7 +49,24 @@ export const aoc_macros: Plugin<void> = {
 			}
 		});
 
+		transformed.prepend(`import { format } from "util";`);
+
 		transformed.append(";main();");
+		transformed.append(`
+			;
+			function _panic(pre, pre_with_args, ...args) {
+				if (args.length > 0) {
+					console.error(format(pre_with_args, ...args));
+				} else {
+					console.error(pre);
+				}
+
+				process.exit(101);
+			}
+
+			function panic(...args) { _panic("program panicked", "program panicked:", ...args) }
+			function unreachable(...args) { _panic("entered unreachable code", "entered unreachable code:", ...args) }
+		`);
 
 		if (transformed.hasChanged()) {
 			return {
@@ -62,4 +79,6 @@ export const aoc_macros: Plugin<void> = {
 
 declare global {
 	function aoc_get_input(): Promise<string>;
+	function panic(...p: Array<any>): never;
+	function unreachable(...p: Array<any>): never;
 }
