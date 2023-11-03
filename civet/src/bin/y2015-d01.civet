@@ -1,9 +1,22 @@
 function main
-	input := aoc_get_input() |> await
+	input_str := aoc_get_input() |> await
 
-	input
+	input := input_str
 		|> .trim()
 		|> .split("")
-		|> .map (& === "(" ? 1 : -1)
+		|> .map (c): number => switch c
+			"(" then 1
+			")" then -1
+			else unreachable()
+
+	input
 		|> .reduce (a, b) => a + b, 0
 		||> (res) => console.log `part 1: floor ${res}`
+
+	current_floor .= 0
+
+	for i of [0...input.length]
+		current_floor += input[i]
+		if current_floor < 0
+			console.log `part 2: step ${i + 1}`
+			break
