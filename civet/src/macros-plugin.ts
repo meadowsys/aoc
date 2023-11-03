@@ -30,7 +30,7 @@ export const aoc_macros: Plugin<void> = {
 								import("fs/promises")
 							]))
 							.then(([test_exists, fs]) => {
-								if (test_exists) {
+								if (test_exists && !process.env.NO_DEBUG_DATA) {
 									console.log("WARNING: ${test_path} exists, reading input from there. To disable, set \`NO_DEBUG_DATA=1\`");
 									return fs.readFile("${test_path}", "utf8")
 										.catch(() => {
