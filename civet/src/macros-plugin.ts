@@ -66,6 +66,16 @@ export const aoc_macros: Plugin<void> = {
 
 			function panic(...args) { _panic("program panicked", "program panicked:", ...args) }
 			function unreachable(...args) { _panic("entered unreachable code", "entered unreachable code:", ...args) }
+			function unwrap(e) {
+				if (e === undefined) {
+					panic("attempted to unwrap an undefined value");
+				}
+				if (e === null) {
+					panic("attempted to unwrap a null value");
+				}
+
+				return e;
+			}
 		`);
 
 		if (transformed.hasChanged()) {
@@ -81,4 +91,5 @@ declare global {
 	function aoc_get_input(): Promise<string>;
 	function panic(...p: Array<any>): never;
 	function unreachable(...p: Array<any>): never;
+	function unwrap<T>(e: T | undefined | null): T;
 }
