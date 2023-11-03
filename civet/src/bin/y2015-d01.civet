@@ -3,7 +3,7 @@ function main
 
 	input := input_str
 		|> .trim()
-		|> .split("")
+		|> .split ""
 		|> .map (c): number => switch c
 			"(" then 1
 			")" then -1
