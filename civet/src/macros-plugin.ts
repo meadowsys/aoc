@@ -78,12 +78,10 @@ export const aoc_macros: Plugin<void> = {
 			}
 		`);
 
-		if (transformed.hasChanged()) {
-			return {
-				code: transformed.toString(),
-				map: transformed.generateMap()
-			}
-		}
+		return {
+			code: transformed.toString(),
+			map: transformed.generateMap()
+		};
 	},
 };
 
