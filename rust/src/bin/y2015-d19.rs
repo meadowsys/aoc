@@ -87,25 +87,23 @@ fn get_to_e(molecule: String, replacers: &Vec<(String, String)>) -> Option<usize
 	) -> Option<usize> {
 		if molecule == "e" { return Some(step) }
 
-		for (i, _) in molecule.char_indices().rev() {
-			let start = &molecule[..i];
-			let end = &molecule[i..];
+		molecule.char_indices()
+			.rev()
+			.find_map(|(i, _)| {
+				let start = &molecule[..i];
+				let end = &molecule[i..];
 
-			for (rep, pat) in replacers {
-				if !end.starts_with(pat) { continue }
+				replacers.iter().find_map(|(rep, pat)| {
+					if !end.starts_with(pat) { return None }
+					let end = &end[pat.len()..];
+					let new_molecule = start.chars()
+						.chain(rep.chars())
+						.chain(end.chars())
+						.collect::<String>();
 
-				let end = &end[pat.len()..];
-				let new_molecule = start.chars()
-					.chain(rep.chars())
-					.chain(end.chars())
-					.collect::<String>();
-
-				let res = get_to_e_inner(new_molecule, replacers, step + 1);
-				if res.is_some() { return res }
-			}
-		}
-
-		None
+					get_to_e_inner(new_molecule, replacers, step + 1)
+				})
+			})
 	}
 
 	get_to_e_inner(molecule, replacers, 0)
