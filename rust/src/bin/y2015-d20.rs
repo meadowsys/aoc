@@ -1,5 +1,3 @@
-use rayon::prelude::*;
-
 fn main() {
 	let input_str = aoc::get_input!();
 	let input = input_str.trim();

@@ -24,7 +24,7 @@ export const aoc_macros: Plugin<void> = {
 					let test_path = `./input/${file}.debug.txt`;
 
 					transformed.update((node as any).start, (node as any).end, `
-						await import("fs")
+						import("fs")
 							.then(fs => Promise.all([
 								Promise.resolve(fs.existsSync("${test_path}")),
 								import("fs/promises")

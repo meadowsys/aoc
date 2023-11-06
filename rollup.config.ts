@@ -18,7 +18,8 @@ export default defineConfig({
 	output: {
 		format: "esm",
 		dir: civet_build,
-		entryFileNames: "[name].mjs"
+		entryFileNames: "[name].mjs",
+		sourcemap: "inline"
 	},
 	plugins: [
 		typescript(),
