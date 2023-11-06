@@ -25,6 +25,7 @@ fn main() {
 	let amount_rings = 0..=2;
 
 	let mut least_cost = isize::MAX;
+	let mut most_cost = 0;
 
 	for w in amount_weapons.clone() {
 		for a in amount_armour.clone() {
@@ -49,6 +50,9 @@ fn main() {
 							let player_armour = all_items.iter()
 								.map(|i| i.armour)
 								.sum::<isize>();
+							let cost = all_items.iter()
+								.map(|i| i.cost)
+								.sum::<isize>();
 
 							let game = Game {
 								boss_hit_points,
@@ -58,12 +62,11 @@ fn main() {
 								player_damage,
 								player_armour
 							};
-							let player_won = game.will_player_win();
-							if player_won {
-								let cost = all_items.iter()
-									.map(|i| i.cost)
-									.sum::<isize>();
+
+							if game.will_player_win() {
 								least_cost = least_cost.min(cost);
+							} else {
+								most_cost = most_cost.max(cost);
 							}
 						}
 					}
@@ -73,6 +76,7 @@ fn main() {
 	}
 
 	println!("part 1: least cost to win: {least_cost}");
+	println!("part 2: most cost to lose: {most_cost}");
 }
 
 #[derive(pest_derive::Parser)]
