@@ -46,6 +46,17 @@ fn main() {
 		.collect::<aoc::Set<_>>();
 
 	println!("part 1: number of unique molecules, replace once: {}", replaced_molecules.len());
+
+	let sorted_replacers = {
+		let mut temp = replacers.iter()
+			.cloned()
+			.collect::<Vec<_>>();
+		temp.sort_unstable_by_key(|r| std::cmp::Reverse((r.1.len(), r.0.len())));
+		temp
+	};
+
+	let steps = get_to_e(molecule, &sorted_replacers).unwrap();
+	eprintln!("part 2: steps to medicine: {steps}");
 }
 
 #[derive(pest_derive::Parser)]
@@ -65,4 +76,37 @@ impl<'h> PairExts for pest::iterators::Pair<'h, Rule> {
 
 		(src, to)
 	}
+}
+
+#[inline]
+fn get_to_e(molecule: String, replacers: &Vec<(String, String)>) -> Option<usize> {
+	fn get_to_e_inner(
+		molecule: String,
+		replacers: &Vec<(String, String)>,
+		step: usize
+	) -> Option<usize> {
+		if molecule == "e" { return Some(step) }
+
+		for (i, _) in molecule.char_indices().rev() {
+			let start = &molecule[..i];
+			let end = &molecule[i..];
+
+			for (rep, pat) in replacers {
+				if !end.starts_with(pat) { continue }
+
+				let end = &end[pat.len()..];
+				let new_molecule = start.chars()
+					.chain(rep.chars())
+					.chain(end.chars())
+					.collect::<String>();
+
+				let res = get_to_e_inner(new_molecule, replacers, step + 1);
+				if res.is_some() { return res }
+			}
+		}
+
+		None
+	}
+
+	get_to_e_inner(molecule, replacers, 0)
 }
