@@ -42,6 +42,7 @@ export const aoc_macros: Plugin<void> = {
 								return fs.readFile("${path}", "utf8")
 									.catch(() => {
 										console.log("failed to get input, neither ${path} nor ${test_path} seem to exist");
+										process.exit(1);
 									});
 							})
 					`);
