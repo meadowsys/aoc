@@ -1,0 +1,15 @@
+file = ${
+	SOI
+
+	~ "Hit Points: " ~ number
+	~ NEWLINE
+	~ "Damage: " ~ number
+	~ NEWLINE
+	~ "Armor: " ~ number
+
+	~ NEWLINE*
+
+	~ EOI
+}
+
+number = { ASCII_DIGIT+ }
