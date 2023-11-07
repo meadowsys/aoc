@@ -1,0 +1,15 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE* ~ EOI }
+
+line = _{ hlf | tpl | inc | jmp | jie | jio }
+
+hlf = { "hlf " ~ register }
+tpl = { "tpl " ~ register }
+inc = { "inc " ~ register }
+jmp = { "jmp " ~ jump_instruction }
+jie = { "jie " ~ register ~ ", " ~ jump_instruction }
+jio = { "jio " ~ register ~ ", " ~ jump_instruction }
+
+register = { 'a'..'z' }
+jump_instruction = { sign ~ jump_amount }
+sign = { "+" | "-" }
+jump_amount = { ASCII_DIGIT+ }
