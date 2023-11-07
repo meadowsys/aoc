@@ -38,8 +38,6 @@ fn main() {
 	if !found { panic!("notfoundaa"); }
 	let total_distance = state.distance_x.abs() + state.distance_y.abs();
 	println!("part 2: total distance of first dupe: {total_distance}");
-
-
 }
 
 #[derive(Debug)]
