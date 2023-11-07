@@ -30,6 +30,16 @@ fn main() {
 	}
 
 	println!("part 1: register b: {}", registers.get("b").unwrap());
+
+	pos = 1;
+	registers.clear();
+	registers.insert("a".into(), 1);
+	while let Some(instruction) = instructions.get(&pos) {
+		let jump_instruction = instruction.operate_on(&mut registers);
+		pos += jump_instruction;
+	}
+
+	println!("part 2: register b if a starts at 1: {}", registers.get("b").unwrap());
 }
 
 #[derive(pest_derive::Parser)]
