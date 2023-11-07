@@ -1,0 +1,3 @@
+file = ${ SOI ~ "To continue, please consult the code grid in the manual.  Enter the code at row " ~ number ~ ", column " ~ number ~ "." ~ NEWLINE ~ EOI }
+
+number = { ASCII_DIGIT+ }
