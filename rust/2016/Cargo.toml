@@ -11,7 +11,6 @@ camino.workspace = true
 fancy-regex.workspace = true
 hashbrown.workspace = true
 itertools.workspace = true
-md-5.workspace = true
 pest.workspace = true
 pest_derive.workspace = true
 serde.workspace = true
