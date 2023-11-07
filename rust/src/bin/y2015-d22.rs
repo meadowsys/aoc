@@ -1,5 +1,6 @@
 use pest::Parser as _;
 use std::ops::ControlFlow;
+use std::thread::spawn;
 
 fn main() {
 	let input_str = aoc::get_input!();
@@ -30,8 +31,20 @@ fn main() {
 		total_mana_spent: 0
 	};
 
-	let least_mana = game.least_mana_still_win().unwrap();
+	let game2 = game.clone();
+	let least_mana = spawn(|| {
+		game2.least_mana_still_win(false).unwrap()
+	});
+
+	let least_mana_hard = spawn(|| {
+		game.least_mana_still_win(true).unwrap()
+	});
+
+	let least_mana = least_mana.join().unwrap();
+	let least_mana_hard = least_mana_hard.join().unwrap();
+
 	println!("part 1: least mana to win the game: {least_mana}");
+	println!("part 2: least mana to win (hard mode): {least_mana_hard}");
 }
 
 #[derive(pest_derive::Parser)]
@@ -70,9 +83,19 @@ type GameResult = ControlFlow<(Character, Game), Game>;
 impl Game {
 	fn subtract_player_mana(mut self, mana: isize) -> GameResult {
 		self.player_mana -= mana;
-		self.total_mana_spent += mana;
 
 		if self.player_mana <= 0 {
+			GameResult::Break((Character::Boss, self))
+		} else {
+			self.total_mana_spent += mana;
+			GameResult::Continue(self)
+		}
+	}
+
+	fn subtract_player_hit_points(mut self, hitpoints: isize) -> GameResult {
+		self.player_hit_points -= hitpoints;
+
+		if self.player_hit_points <= 0 {
 			GameResult::Break((Character::Boss, self))
 		} else {
 			GameResult::Continue(self)
@@ -160,7 +183,7 @@ impl Game {
 		GameResult::Continue(self)
 	}
 
-	fn least_mana_still_win(self) -> Option<isize> {
+	fn least_mana_still_win(self, hard_mode: bool) -> Option<isize> {
 		const ALL_EFFECTS: &[Effect] = &[
 			Effect::MagicMissile,
 			Effect::Drain,
@@ -170,10 +193,18 @@ impl Game {
 		];
 
 		ALL_EFFECTS.iter()
-			.filter(|e| !self.active_effects.contains_key(*e))
+			.filter(|e| if let Some(turns) = self.active_effects.get(*e) {
+				// first pre-player-turn tick will make this expire
+				// so it will be available to cast again
+				*turns <= 1
+			} else {
+				true
+			})
 			.cloned()
 			.zip([self.clone()].iter().cycle().cloned())
-			.map(|(effect, mut game)| -> GameResult {
+			.map(|(effect, mut game)| {
+				if hard_mode { game = game.subtract_player_hit_points(1)? }
+
 				// player turn
 				game = game.tick_effects()?;
 				game = game.player_cast_spell(effect)?;
@@ -186,7 +217,7 @@ impl Game {
 			})
 			.filter_map(|res| match res {
 				GameResult::Continue(game) => {
-					game.least_mana_still_win()
+					game.least_mana_still_win(hard_mode)
 				}
 				GameResult::Break((Character::Player, game)) => {
 					Some(game.total_mana_spent)
