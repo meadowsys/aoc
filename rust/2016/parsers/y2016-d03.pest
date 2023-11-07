@@ -1,0 +1,6 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ NEWLINE* ~ EOI }
+
+line = { whitespace? ~ side ~ whitespace ~ side ~ whitespace ~ side }
+
+whitespace = _{ WHITE_SPACE+ }
+side = { ASCII_DIGIT+ }
