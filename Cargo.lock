@@ -39,7 +39,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "aoc-bin"
+name = "aoc-2015-bin"
 version = "0.0.0"
 dependencies = [
  "ahash",
