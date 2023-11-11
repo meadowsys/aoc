@@ -1,0 +1,7 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ EOI }
+
+line = { (letter_group ~ "-")+ ~ sector_id ~ "[" ~ letter_group_5 ~ "]" }
+
+letter_group = { ASCII_ALPHA+ }
+sector_id = { ASCII_DIGIT+ }
+letter_group_5 = { ASCII_ALPHA{5} }
