@@ -14,9 +14,27 @@ fn main() {
 
 	let real_rooms = lines
 		.filter_map(into_valid_room_sector_id)
+		.collect::<Vec<_>>();
+
+	let real_room_count = real_rooms.iter()
+		.map(|(i, _)| i)
 		.sum::<usize>();
 
-	println!("part 1: real rooms: {real_rooms}");
+	println!("part 1: real rooms: {real_room_count}");
+
+	let rotated_strings = real_rooms.iter()
+		.map(|(sector, name)| (
+			*sector,
+			name.chars().map(|c| rotate(c, *sector)).collect::<String>()
+		))
+		.collect::<Vec<_>>();
+
+	println!("part 2: rotated strings:");
+	for (sector, name) in &rotated_strings {
+		println!("   sector {sector}, {name}");
+	}
+	println!("end part 2: rotated strings");
+	println!("(try piping to `grep north` or something)");
 }
 
 #[derive(pest_derive::Parser)]
@@ -25,7 +43,7 @@ pub struct InputParser;
 
 fn into_valid_room_sector_id(
 	line: pest::iterators::Pair<'_, Rule>
-) -> Option<usize> {
+) -> Option<(usize, String)> {
 	let mut string = String::with_capacity(line.as_str().len());
 	let mut inner = line.into_inner();
 
@@ -33,6 +51,8 @@ fn into_valid_room_sector_id(
 		let item = inner.next().unwrap();
 
 		if !matches!(item.as_rule(), Rule::letter_group) {
+			string.pop();
+
 			let letter_group_5 = inner.next()
 				.unwrap()
 				.as_str();
@@ -41,13 +61,14 @@ fn into_valid_room_sector_id(
 				let sector_id = item.as_str()
 					.parse::<usize>()
 					.unwrap();
-				Some(sector_id)
+				Some((sector_id, string))
 			} else {
 				None
 			}
 		}
 
 		string.push_str(item.as_str());
+		string.push(' ');
 	}
 }
 
@@ -67,6 +88,21 @@ fn is_valid(letters: &str, most: &str) -> bool {
 	vec.sort_unstable_by_key(|(letter, count)| (Reverse(*count), *letter));
 
 	vec.into_iter()
+		.filter(|(c, _)| c.is_alphabetic())
 		.take(5)
 		.all(|c| most.contains(c.0))
+}
+
+/// n must be less than 26 (num chars in alpha)
+fn rotate(c: char, n: usize) -> char {
+	match c {
+		'a'..='z' => {
+			let mut c = c as usize - b'a' as usize;
+			c += n;
+			c %= 26;
+			(c as u8 + b'a') as char
+		}
+		' ' => { ' ' }
+		_ => { unreachable!() }
+	}
 }
