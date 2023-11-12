@@ -11,7 +11,7 @@ fn main() {
 	println!("part 2: first hash with 6 starting zeros: {i} ({result})");
 }
 
-fn get_first_hash_starting_with(key: &str, starting_with: &str) -> (usize, String){
+fn get_first_hash_starting_with(key: &str, starting_with: &str) -> (usize, String) {
 	for i in 0usize.. {
 		let hash_input = format!("{key}{i}");
 
