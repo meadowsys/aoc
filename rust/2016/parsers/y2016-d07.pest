@@ -1,0 +1,6 @@
+file = ${ SOI ~ (line ~ NEWLINE)+ ~ EOI }
+
+line = { outside_bracket ~ ("[" ~ inside_bracket ~ "]" ~ outside_bracket)+ }
+
+outside_bracket = { ASCII_ALPHA+ }
+inside_bracket = { ASCII_ALPHA+ }
