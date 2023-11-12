@@ -2,8 +2,8 @@ use itertools::Itertools as _;
 use std::cmp::Reverse;
 
 fn main() {
-	let input = aoc::get_input!();
-	let input = input.trim()
+	let input_str = aoc::get_input!();
+	let input = input_str.trim()
 		.lines()
 		.map(|l| l.trim())
 		.collect::<Vec<_>>();

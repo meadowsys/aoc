@@ -1,6 +1,6 @@
 fn main() {
-	let input = aoc::get_input!();
-	let input = input.trim();
+	let input_str = aoc::get_input!();
+	let input = input_str.trim();
 
 	let password = InterestingHashesIter::with_input(input)
 		.take(PASSWORD_LEN)
