@@ -13,6 +13,7 @@ rust-version = "1.73.0"
 ahash = "0.8.6"
 aoc = { path = "./rust/lib" }
 camino = "1.1.6"
+crossbeam-channel = "0.5.8"
 fancy-regex = "0.11.0"
 hashbrown = "0.14.2"
 itertools = "0.11.0"

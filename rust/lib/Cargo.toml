@@ -6,4 +6,5 @@ rust-version.workspace = true
 
 [dependencies]
 ahash.workspace = true
+crossbeam-channel.workspace = true
 hashbrown.workspace = true

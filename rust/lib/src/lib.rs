@@ -1,3 +1,5 @@
+#![allow(clippy::new_without_default)]
+
 #[macro_export]
 macro_rules! get_yd {
 	() => {{
@@ -93,3 +95,6 @@ macro_rules! set {
 
 pub type Map<K, V> = hashbrown::HashMap<K, V, ahash::RandomState>;
 pub type Set<T> = hashbrown::HashSet<T, ahash::RandomState>;
+
+mod md5;
+pub use md5::Md5;
