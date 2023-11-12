@@ -37,6 +37,7 @@ dependencies = [
  "ahash",
  "crossbeam-channel",
  "hashbrown",
+ "md-5",
 ]
 
 [[package]]

@@ -96,5 +96,5 @@ macro_rules! set {
 pub type Map<K, V> = hashbrown::HashMap<K, V, ahash::RandomState>;
 pub type Set<T> = hashbrown::HashSet<T, ahash::RandomState>;
 
-mod md5;
-pub use md5::Md5;
+mod hash;
+pub use hash::*;
