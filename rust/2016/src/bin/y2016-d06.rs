@@ -24,7 +24,7 @@ fn main() {
 		.all_equal();
 	assert!(all_equal_len);
 
-	let message = cols.iter()
+	let char_counts = cols.iter()
 		.map(|col| {
 			let mut char_counts = col.iter()
 				.fold(aoc::map!(), |mut map, next| {
@@ -34,11 +34,21 @@ fn main() {
 				.into_iter()
 				.collect::<Vec<_>>();
 			char_counts.sort_unstable_by_key(|(char, count)| (Reverse(*count), *char));
-			char_counts.first().unwrap().0
+			char_counts
 		})
+		.collect::<Vec<_>>();
+
+	let message = char_counts.iter()
+		.map(|c| c.first().unwrap().0)
 		.collect::<String>();
 
-	println!("part 1: decoded message: {message}");
+	println!("part 1: decoded repetition code: {message}");
+
+	let message = char_counts.iter()
+		.map(|c| c.last().unwrap().0)
+		.collect::<String>();
+
+	println!("part 1: decoded modified repetition code: {message}");
 }
 
 // fn get_max_occurance
