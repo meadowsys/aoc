@@ -50,5 +50,3 @@ fn main() {
 
 	println!("part 1: decoded modified repetition code: {message}");
 }
-
-// fn get_max_occurance
