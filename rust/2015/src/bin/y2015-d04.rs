@@ -1,5 +1,3 @@
-use md5::{ Md5, Digest };
-
 fn main() {
 	let input_str = aoc::get_input!();
 	let key = input_str.trim();
@@ -14,14 +12,7 @@ fn main() {
 fn get_first_hash_starting_with(key: &str, starting_with: &str) -> (usize, String) {
 	for i in 0usize.. {
 		let hash_input = format!("{key}{i}");
-
-		let mut hasher = Md5::new();
-		hasher.update(hash_input);
-
-		let result = Into::<[u8; 16]>::into(hasher.finalize())
-			.map(|e| format!("{e:02x?}"))
-			.join("");
-
+		let result = aoc::hash_md5(&hash_input);
 		if result.starts_with(starting_with) {
 			return (i, result)
 		}

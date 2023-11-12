@@ -50,7 +50,6 @@ dependencies = [
  "fancy-regex",
  "hashbrown",
  "itertools",
- "md-5",
  "pest",
  "pest_derive",
  "serde",
