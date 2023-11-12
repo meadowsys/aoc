@@ -1,3 +1,5 @@
+#![allow(clippy::ptr_arg)]
+
 use itertools::Either;
 use itertools::Itertools as _;
 use pest::Parser as _;
@@ -17,13 +19,10 @@ fn main() {
 		.map(PairExts::into_segments)
 		.collect::<Vec<_>>();
 
-	let lines = segmented_lines.iter()
+	let tls = segmented_lines.iter()
 		.filter(|segments| {
 			let (outside, inside) = segments.iter()
-				.partition_map::<Vec<_>, Vec<_>, _, _, _>(|s| match s {
-					Segment::OutsideBracket(s) => { Either::Left(s) }
-					Segment::InsideBracket(s) => { Either::Right(s) }
-				});
+				.partition_map::<Vec<_>, Vec<_>, _, _, _>(outside_left);
 
 			let out_result = || outside.into_iter().any(|s| has_abba(s));
 			let in_result = || inside.into_iter().all(|s| !has_abba(s));
@@ -32,7 +31,30 @@ fn main() {
 		})
 		.collect::<Vec<_>>();
 
-	println!("part 1: IPs that support TLS: {}", lines.len());
+	println!("part 1: IPs that support TLS: {}", tls.len());
+
+	let ssl = segmented_lines.iter()
+		.filter(|segments| {
+			let (outside, inside) = segments.iter()
+				.partition_map::<Vec<_>, Vec<_>, _, _, _>(outside_left);
+
+			let out_bab = outside.iter()
+				.copied()
+				.flat_map(get_aba)
+				.map(aba_to_bab)
+				.map(bab_to_str)
+				.collect::<Vec<_>>();
+
+			if out_bab.is_empty() {
+				false
+			} else {
+				inside.iter()
+					.any(|s| out_bab.iter().any(|bab| s.contains(bab)))
+			}
+		})
+		.collect::<Vec<_>>();
+
+		println!("part 2: IPs that support SSL: {}", ssl.len());
 }
 
 enum Segment {
@@ -48,6 +70,29 @@ fn has_abba(s: &str) -> bool {
 	s.chars()
 		.tuple_windows::<(_, _, _, _)>()
 		.any(|(a, b, c, d)| a != b && a == d && b == c)
+}
+
+fn get_aba(s: &String) -> Vec<(char, char, char)> {
+	s.chars()
+		.tuple_windows::<(_, _, _)>()
+		.filter(|(a, b, c)| a != b && a == c)
+		.collect()
+}
+
+fn aba_to_bab(aba: (char, char, char)) -> (char, char, char) {
+	let (a, b, _a) = aba;
+	(b, a, b)
+}
+
+fn bab_to_str(bab: (char, char, char)) -> String {
+	[bab.0, bab.1, bab.2].into_iter().collect()
+}
+
+fn outside_left(s: &Segment) -> Either<&String, &String> {
+	match s {
+		Segment::OutsideBracket(s) => { Either::Left(s) }
+		Segment::InsideBracket(s) => { Either::Right(s) }
+	}
 }
 
 trait PairExts {
