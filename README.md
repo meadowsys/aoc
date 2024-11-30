@@ -1,3 +1,5 @@
+## **NOTE**: My more recent attempts at AOC can be found [here](https://github.com/meadowsys/aoc2)
+
 # aoc
 
 my [Advent of Code] solutions
